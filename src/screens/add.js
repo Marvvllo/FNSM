@@ -14,6 +14,7 @@ import globalStyles from '../styles/globalStyles';
 
 const Add = ({navigation}) => {
   const [text, setText] = useState('');
+  const [desc, setDesc] = useState('');
   const [time, setTime] = useState('');
 
   const textChange = value => {
@@ -24,6 +25,10 @@ const Add = ({navigation}) => {
     setTime(value);
   };
 
+  const descChange = value => {
+    setDesc(value);
+  };
+
   return (
     <View style={{height: '100%', flex: 1, position: 'relative'}}>
       <View style={styles.missionDetailsContainer}>
@@ -31,7 +36,9 @@ const Add = ({navigation}) => {
           style={styles.missionImage}
           source={require('../../assets/images/detailImage.png')}
         />
-        <Text style={[globalStyles.semiBold, styles.missionBody]}></Text>
+        <Text style={[globalStyles.semiBold, styles.missionBody]}>
+          Add a mission for Spidey!
+        </Text>
       </View>
       <TouchableOpacity
         style={styles.reqButton}
@@ -45,11 +52,25 @@ const Add = ({navigation}) => {
         source={require('../../assets/images/backgroundImage.png')}
         style={styles.formContainer}>
         <TextInput
-          style={[globalStyles.regular, styles.input]}
+          style={[globalStyles.bold, styles.input]}
           placeholderTextColor="#f7f7f7"
-          placeholder="New Todo..."
+          placeholder="Mission title..."
           onChangeText={textChange}
         />
+
+        <TextInput
+          style={[globalStyles.bold, styles.input]}
+          placeholderTextColor="#f7f7f7"
+          placeholder="Mission description..."
+          onChangeText={descChange}
+        />
+        <TextInput
+          style={[globalStyles.bold, styles.input]}
+          placeholderTextColor="#f7f7f7"
+          placeholder="Mission time..."
+          onChangeText={timeChange}
+        />
+
         <TouchableOpacity
           style={styles.addButton}
           // onPress={() => submitHandler(text)}
@@ -83,8 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     color: COLORS.text,
     fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    padding: 8,
   },
   reqButton: {
     position: 'absolute',
@@ -93,12 +113,23 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   input: {
-    fontSize: 16,
+    backgroundColor: COLORS.missionBackground,
+    marginVertical: 16,
+    marginHorizontal: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderColor: COLORS.missionColor,
+    borderWidth: 4,
+    color: COLORS.text,
   },
   addButton: {
     backgroundColor: COLORS.primary,
     paddingVertical: 8,
     paddingHorizontal: 32,
+    borderRadius: 8,
+    borderColor: COLORS.primaryVar,
+    borderWidth: 4,
     alignSelf: 'center',
   },
   addButtonText: {
