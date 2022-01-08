@@ -4,10 +4,12 @@ import {
   Button,
   Image,
   ImageBackground,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -73,12 +75,12 @@ const Add = ({navigation}) => {
         ],
       );
     } else if (type === 'Activity') {
-      const result = JSON.stringify([...activities, mission]);
+      const result = JSON.stringify([mission, ...activities]);
       console.log(result);
       await AsyncStorage.setItem('activities', result);
       navigation.replace('mainApp');
     } else if (type === 'Crime') {
-      const result = JSON.stringify([...crimes, mission]);
+      const result = JSON.stringify([mission, ...crimes]);
       console.log(result);
       await AsyncStorage.setItem('crimes', result);
       navigation.replace('mainApp');
