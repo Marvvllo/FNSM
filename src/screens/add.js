@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Button,
   Image,
   ImageBackground,
@@ -10,17 +11,21 @@ import {
   View,
 } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from '../colors/colors';
 import globalStyles from '../styles/globalStyles';
 
 const Add = ({navigation}) => {
-  const [text, setText] = useState('');
+  const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [time, setTime] = useState('');
   const [type, setType] = useState('');
+  const [activities, setActivities] = useState([]);
+  const [crimes, setCrimes] = useState([]);
+  const [missions, setMissions] = useState([]);
 
-  const textChange = value => {
-    setText(value);
+  const titleChange = value => {
+    setTitle(value);
   };
 
   const timeChange = value => {
@@ -33,6 +38,51 @@ const Add = ({navigation}) => {
 
   const typeChange = value => {
     setType(value);
+  };
+
+  const getActivities = async () => {
+    const result = await AsyncStorage.getItem('activities');
+    if (result !== null) setActivities(JSON.parse(result));
+  };
+
+  const getCrimes = async () => {
+    const result = await AsyncStorage.getItem('activities');
+    if (result !== null) setCrimes(JSON.parse(result));
+  };
+
+  useEffect(() => {
+    getActivities();
+    getCrimes();
+  }, []);
+
+  const submitHandler = async () => {
+    const mission = {
+      key: Date.now(),
+      title: title,
+      body: desc,
+      time: time,
+    };
+    if (!title || !desc || !time || !type) {
+      Alert.alert(
+        'Request incomplete',
+        'Please fill out your request before adding it',
+        [
+          {
+            text: 'Okay',
+          },
+        ],
+      );
+    } else if (type === 'Activity') {
+      const result = JSON.stringify([...activities, mission]);
+      console.log(result);
+      await AsyncStorage.setItem('activities', result);
+      navigation.replace('mainApp');
+    } else if (type === 'Crime') {
+      const result = JSON.stringify([...crimes, mission]);
+      console.log(result);
+      await AsyncStorage.setItem('crimes', result);
+      navigation.replace('mainApp');
+    }
   };
 
   return (
@@ -61,7 +111,7 @@ const Add = ({navigation}) => {
           style={[globalStyles.bold, styles.input]}
           placeholderTextColor="#f7f7f7"
           placeholder="Mission title..."
-          onChangeText={textChange}
+          onChangeText={titleChange}
         />
 
         <TextInput
@@ -82,7 +132,6 @@ const Add = ({navigation}) => {
           data={['Activity', 'Crime']}
           onSelect={(selectedItem, index) => {
             typeChange(selectedItem);
-            console.log(type);
           }}
           defaultButtonText="Mission type..."
           dropdownIconPosition="right"
@@ -100,8 +149,7 @@ const Add = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.addButton}
-          // onPress={() => submitHandler(text)}
-        >
+          onPress={() => submitHandler()}>
           <Text style={[globalStyles.bold, styles.addButtonText]}>Add</Text>
         </TouchableOpacity>
       </ImageBackground>

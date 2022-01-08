@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -8,11 +8,21 @@ import {
 } from 'react-native';
 import COLORS from '../colors/colors';
 import ListItem from '../components/listItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CrimesData from '../data/crimesData';
 import globalStyles from '../styles/globalStyles';
 
 const Activities = ({setDetails}) => {
-  const [crimes, setCrimes] = useState(CrimesData);
+  const [crimes, setCrimes] = useState([]);
+
+  const getCrimes = async () => {
+    const result = await AsyncStorage.getItem('crimes');
+    if (result !== null) setCrimes(JSON.parse(result));
+  };
+
+  useEffect(() => {
+    getCrimes();
+  }, []);
 
   return (
     <ImageBackground
