@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
 import COLORS from '../colors/colors';
 import globalStyles from '../styles/globalStyles';
 
@@ -16,6 +17,7 @@ const Add = ({navigation}) => {
   const [text, setText] = useState('');
   const [desc, setDesc] = useState('');
   const [time, setTime] = useState('');
+  const [type, setType] = useState('');
 
   const textChange = value => {
     setText(value);
@@ -27,6 +29,10 @@ const Add = ({navigation}) => {
 
   const descChange = value => {
     setDesc(value);
+  };
+
+  const typeChange = value => {
+    setType(value);
   };
 
   return (
@@ -64,11 +70,32 @@ const Add = ({navigation}) => {
           placeholder="Mission description..."
           onChangeText={descChange}
         />
+
         <TextInput
           style={[globalStyles.bold, styles.input]}
           placeholderTextColor="#f7f7f7"
           placeholder="Mission time..."
           onChangeText={timeChange}
+        />
+
+        <SelectDropdown
+          data={['Activity', 'Crime']}
+          onSelect={(selectedItem, index) => {
+            typeChange(selectedItem);
+            console.log(type);
+          }}
+          defaultButtonText="Mission type..."
+          dropdownIconPosition="right"
+          buttonStyle={styles.dropdownButton}
+          dropdownStyle={styles.dropdownSelect}
+          buttonTextStyle={[globalStyles.bold, styles.dropdownText]}
+          rowTextStyle={[globalStyles.bold, styles.dropdownText]}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
         />
 
         <TouchableOpacity
@@ -87,6 +114,7 @@ export default Add;
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
+    alignItems: 'center',
     resizeMode: 'cover',
     backgroundColor: COLORS.background,
   },
@@ -114,6 +142,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: COLORS.missionBackground,
+    width: '90%',
     marginVertical: 16,
     marginHorizontal: 16,
     paddingHorizontal: 16,
@@ -122,6 +151,36 @@ const styles = StyleSheet.create({
     borderColor: COLORS.missionColor,
     borderWidth: 4,
     color: COLORS.text,
+    fontSize: 16,
+  },
+  dropdownButton: {
+    backgroundColor: COLORS.missionBackground,
+    width: '90%',
+    marginVertical: 16,
+    marginHorizontal: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderColor: COLORS.missionColor,
+    borderWidth: 4,
+    color: COLORS.text,
+  },
+  dropdownSelect: {
+    backgroundColor: COLORS.missionBackground,
+    width: '90%',
+    height: '18%',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderColor: COLORS.missionColor,
+    borderWidth: 4,
+    color: COLORS.text,
+    fontSize: 16,
+  },
+  dropdownText: {
+    color: COLORS.text,
+    fontSize: 16,
+    justifyContent: 'flex-start',
   },
   addButton: {
     backgroundColor: COLORS.primary,
