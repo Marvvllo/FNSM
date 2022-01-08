@@ -1,20 +1,25 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import COLORS from '../colors/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import globalStyles from '../styles/globalStyles';
 
-const ListItem = ({item, setData, setDetails}) => {
-  const removeActivity = key => {
-    setData(prevActs => {
-      return prevActs.filter(activities => activities.key != key);
-    });
+const ListItem = ({item, storageKey, setData, setDetails}) => {
+  const deleteMission = async key => {
+    const result = await AsyncStorage.getItem(storageKey);
+    let missions = [];
+    if (result) missions = JSON.parse(result);
+
+    const newMissions = missions.filter(missions => missions.key !== key);
+    setData(newMissions);
+    await AsyncStorage.setItem(storageKey, JSON.stringify(newMissions));
   };
 
   return (
     <TouchableOpacity
       style={styles.missionContainer}
       onPress={() => setDetails(item.body)}
-      onLongPress={() => removeActivity(item.key)}>
+      onLongPress={() => deleteMission(item.key)}>
       <Text style={[globalStyles.bold, styles.missionTitle]}>{item.title}</Text>
       <Text style={[globalStyles.semiBold, styles.missionTime]}>
         {item.time}

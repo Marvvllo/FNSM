@@ -28,6 +28,7 @@ const Activities = ({setDetails}) => {
         renderItem={({item}) => (
           <ListItem
             item={item}
+            storageKey="activities"
             setData={setActivities}
             setDetails={setDetails}
           />

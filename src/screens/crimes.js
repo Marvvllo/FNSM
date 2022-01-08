@@ -31,7 +31,12 @@ const Activities = ({setDetails}) => {
       <FlatList
         data={crimes}
         renderItem={({item}) => (
-          <ListItem item={item} setData={setCrimes} setDetails={setDetails} />
+          <ListItem
+            item={item}
+            storageKey="crimes"
+            setData={setCrimes}
+            setDetails={setDetails}
+          />
         )}
       />
     </ImageBackground>
