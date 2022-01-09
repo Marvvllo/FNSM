@@ -48,7 +48,7 @@ const Add = ({navigation}) => {
   };
 
   const getCrimes = async () => {
-    const result = await AsyncStorage.getItem('activities');
+    const result = await AsyncStorage.getItem('crimes');
     if (result !== null) setCrimes(JSON.parse(result));
   };
 
