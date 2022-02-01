@@ -27,7 +27,7 @@ const MainApp = ({navigation}) => {
           style={{width: 50, height: 50}}
         />
       </TouchableOpacity>
-      <MainTab setDetails={setDetails} />
+      <MainTab setDetails={setDetails} navigation={navigation} />
     </View>
   );
 };

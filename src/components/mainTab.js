@@ -8,7 +8,7 @@ import globalStyles from '../styles/globalStyles';
 
 const initialLayout = {width: Dimensions.get('window').width};
 
-const MainTab = ({setDetails}) => {
+const MainTab = ({setDetails, navigation}) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'ACTIVITIES'},
@@ -18,7 +18,7 @@ const MainTab = ({setDetails}) => {
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'first':
-        return <Activities setDetails={setDetails} />;
+        return <Activities setDetails={setDetails} navigation={navigation} />;
       case 'second':
         return <Crimes setDetails={setDetails} />;
       default:

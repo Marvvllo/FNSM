@@ -6,7 +6,7 @@ import ActivitiesData from '../data/activitiesData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import globalStyles from '../styles/globalStyles';
 
-const Activities = ({setDetails}) => {
+const Activities = ({setDetails, navigation}) => {
   const [activities, setActivities] = useState([]);
 
   const getActivities = async () => {
@@ -31,6 +31,7 @@ const Activities = ({setDetails}) => {
             storageKey="activities"
             setData={setActivities}
             setDetails={setDetails}
+            navigation={navigation}
           />
         )}
       />

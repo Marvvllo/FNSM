@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import COLORS from '../colors/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import globalStyles from '../styles/globalStyles';
 
-const ListItem = ({item, storageKey, setData, setDetails}) => {
+const ListItem = ({item, storageKey, setData, setDetails, navigation}) => {
   const deleteMission = async key => {
     const result = await AsyncStorage.getItem(storageKey);
     let missions = [];
@@ -15,11 +15,28 @@ const ListItem = ({item, storageKey, setData, setDetails}) => {
     await AsyncStorage.setItem(storageKey, JSON.stringify(newMissions));
   };
 
+  const deleteEditAlert = () => {
+    Alert.alert(
+      'Delete or edit your mission.',
+      'Please keep in mind deleting will be permanent.',
+      [
+        {
+          text: 'Edit',
+          onPress: () => navigation.navigate('edit'),
+        },
+        {
+          text: 'Delete',
+          onPress: () => deleteMission(item.key),
+        },
+      ],
+    );
+  };
+
   return (
     <TouchableOpacity
       style={styles.missionContainer}
       onPress={() => setDetails(item.body)}
-      onLongPress={() => deleteMission(item.key)}>
+      onLongPress={deleteEditAlert}>
       <Text style={[globalStyles.bold, styles.missionTitle]}>{item.title}</Text>
       <Text style={[globalStyles.semiBold, styles.missionTime]}>
         {item.time}
