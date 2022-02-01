@@ -22,7 +22,8 @@ const ListItem = ({item, storageKey, setData, setDetails, navigation}) => {
       [
         {
           text: 'Edit',
-          onPress: () => navigation.navigate('edit'),
+          onPress: () =>
+            navigation.navigate('edit', {itemKey: item.key, storageKey}),
         },
         {
           text: 'Delete',

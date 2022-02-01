@@ -81,7 +81,6 @@ const Add = ({navigation}) => {
       navigation.replace('mainApp');
     } else if (type === 'Crime') {
       const result = JSON.stringify([mission, ...crimes]);
-      console.log(result);
       await AsyncStorage.setItem('crimes', result);
       navigation.replace('mainApp');
     }

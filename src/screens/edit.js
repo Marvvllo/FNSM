@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  Button,
   Image,
   ImageBackground,
   Keyboard,
@@ -9,21 +8,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import SelectDropdown from 'react-native-select-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from '../colors/colors';
 import globalStyles from '../styles/globalStyles';
 
-const Edit = ({navigation}) => {
+const Edit = ({navigation, route}) => {
+  const {itemKey, storageKey} = route.params;
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [time, setTime] = useState('');
   const [type, setType] = useState('');
-  const [activities, setActivities] = useState([]);
-  const [crimes, setCrimes] = useState([]);
   const [missions, setMissions] = useState([]);
 
   const titleChange = value => {
@@ -42,19 +38,13 @@ const Edit = ({navigation}) => {
     setType(value);
   };
 
-  const getActivities = async () => {
-    const result = await AsyncStorage.getItem('activities');
-    if (result !== null) setActivities(JSON.parse(result));
-  };
-
-  const getCrimes = async () => {
-    const result = await AsyncStorage.getItem('crimes');
-    if (result !== null) setCrimes(JSON.parse(result));
+  const GetMission = async () => {
+    const result = await AsyncStorage.getItem(storageKey);
+    if (result !== null) setMissions(JSON.parse(result));
   };
 
   useEffect(() => {
-    getActivities();
-    getCrimes();
+    GetMission();
   }, []);
 
   const submitHandler = async () => {
@@ -74,16 +64,6 @@ const Edit = ({navigation}) => {
           },
         ],
       );
-    } else if (type === 'Activity') {
-      const result = JSON.stringify([mission, ...activities]);
-      console.log(result);
-      await AsyncStorage.setItem('activities', result);
-      navigation.replace('mainApp');
-    } else if (type === 'Crime') {
-      const result = JSON.stringify([mission, ...crimes]);
-      console.log(result);
-      await AsyncStorage.setItem('crimes', result);
-      navigation.replace('mainApp');
     }
   };
 
@@ -95,7 +75,7 @@ const Edit = ({navigation}) => {
           source={require('../../assets/images/detailImage.png')}
         />
         <Text style={[globalStyles.semiBold, styles.missionBody]}>
-          Add a mission for Spidey!
+          Edit your mission for Spidey here!
         </Text>
       </View>
       <TouchableOpacity
@@ -130,29 +110,10 @@ const Edit = ({navigation}) => {
           onChangeText={timeChange}
         />
 
-        <SelectDropdown
-          data={['Activity', 'Crime']}
-          onSelect={(selectedItem, index) => {
-            typeChange(selectedItem);
-          }}
-          defaultButtonText="Mission type..."
-          dropdownIconPosition="right"
-          buttonStyle={styles.dropdownButton}
-          dropdownStyle={styles.dropdownSelect}
-          buttonTextStyle={[globalStyles.bold, styles.dropdownText]}
-          rowTextStyle={[globalStyles.bold, styles.dropdownText]}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
-        />
-
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => submitHandler()}>
-          <Text style={[globalStyles.bold, styles.addButtonText]}>Add</Text>
+          <Text style={[globalStyles.bold, styles.addButtonText]}>Edit</Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>
