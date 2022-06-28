@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -21,6 +21,8 @@ const Edit = ({navigation, route}) => {
   const [time, setTime] = useState('');
   const [type, setType] = useState('');
   const [missions, setMissions] = useState([]);
+  const [index, setIndex] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const titleChange = value => {
     setTitle(value);
@@ -38,14 +40,27 @@ const Edit = ({navigation, route}) => {
     setType(value);
   };
 
-  const GetMission = async () => {
+  const getMission = async () => {
     const result = await AsyncStorage.getItem(storageKey);
     if (result !== null) setMissions(JSON.parse(result));
+    const indexRes = missions.findIndex(item => item.key === itemKey);
+    setIndex(indexRes);
+  };
+
+  const setTextValues = () => {
+    const currentMission = missions[index];
   };
 
   useEffect(() => {
-    GetMission();
+    getMission();
   }, []);
+
+  useEffect(() => {
+    if (missions && index && missions[index]) {
+      setTitle(missions[index].title);
+      setIsLoading(false);
+    }
+  }, [missions, index]);
 
   const submitHandler = async () => {
     const mission = {
@@ -67,57 +82,64 @@ const Edit = ({navigation, route}) => {
     }
   };
 
-  return (
-    <View style={{height: '100%', flex: 1, position: 'relative'}}>
-      <View style={styles.missionDetailsContainer}>
-        <Image
-          style={styles.missionImage}
-          source={require('../../assets/images/detailImage.png')}
-        />
-        <Text style={[globalStyles.semiBold, styles.missionBody]}>
-          Edit your mission for Spidey here!
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.reqButton}
-        onPress={() => navigation.replace('mainApp')}>
-        <Image
-          source={require('../../assets/icons/request.png')}
-          style={{width: 50, height: 50}}
-        />
-      </TouchableOpacity>
-      <ImageBackground
-        source={require('../../assets/images/backgroundImage.png')}
-        style={styles.formContainer}>
-        <TextInput
-          style={[globalStyles.bold, styles.input]}
-          placeholderTextColor="#f7f7f7"
-          placeholder="Mission title..."
-          onChangeText={titleChange}
-        />
-
-        <TextInput
-          style={[globalStyles.bold, styles.input]}
-          placeholderTextColor="#f7f7f7"
-          placeholder="Mission description..."
-          onChangeText={descChange}
-        />
-
-        <TextInput
-          style={[globalStyles.bold, styles.input]}
-          placeholderTextColor="#f7f7f7"
-          placeholder="Mission time..."
-          onChangeText={timeChange}
-        />
-
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  } else {
+    return (
+      <View style={{height: '100%', flex: 1, position: 'relative'}}>
+        <View style={styles.missionDetailsContainer}>
+          <Image
+            style={styles.missionImage}
+            source={require('../../assets/images/detailImage.png')}
+          />
+          <Text style={[globalStyles.semiBold, styles.missionBody]}>
+            Edit your mission for Spidey here!
+          </Text>
+        </View>
         <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => submitHandler()}>
-          <Text style={[globalStyles.bold, styles.addButtonText]}>Edit</Text>
+          style={styles.reqButton}
+          onPress={() => navigation.replace('mainApp')}>
+          <Image
+            source={require('../../assets/icons/request.png')}
+            style={{width: 50, height: 50}}
+          />
         </TouchableOpacity>
-      </ImageBackground>
-    </View>
-  );
+        <ImageBackground
+          source={require('../../assets/images/backgroundImage.png')}
+          style={styles.formContainer}>
+          {missions.length > 0 && index && (
+            <TextInput
+              style={[globalStyles.bold, styles.input]}
+              placeholderTextColor="#f7f7f7"
+              placeholder="Mission title..."
+              value={title}
+              onChangeText={titleChange}
+            />
+          )}
+
+          <TextInput
+            style={[globalStyles.bold, styles.input]}
+            placeholderTextColor="#f7f7f7"
+            placeholder="Mission description..."
+            onChangeText={descChange}
+          />
+
+          <TextInput
+            style={[globalStyles.bold, styles.input]}
+            placeholderTextColor="#f7f7f7"
+            placeholder="Mission time..."
+            onChangeText={timeChange}
+          />
+
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => submitHandler()}>
+            <Text style={[globalStyles.bold, styles.addButtonText]}>Edit</Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      </View>
+    );
+  }
 };
 
 export default Edit;
